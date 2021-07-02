@@ -1,4 +1,6 @@
-﻿using AP.StarBug.Web.Models;
+﻿using AP.StarBug.Core.Dao;
+using AP.StarBug.Core.Repository.Interface;
+using AP.StarBug.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,16 +13,19 @@ namespace AP.StarBug.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IProductRepository _productRepository;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository)
         {
             _logger = logger;
+            _productRepository = productRepository;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var listProduct = _productRepository.GetAll();
+            return View(listProduct);
         }
 
         public IActionResult Privacy()

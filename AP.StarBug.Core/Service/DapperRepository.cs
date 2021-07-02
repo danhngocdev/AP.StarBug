@@ -21,7 +21,7 @@ namespace AP.StarBug.Core.Service
         public T execute_sp<T>(string query, DynamicParameters sp_params, CommandType commandType = CommandType.StoredProcedure)
         {
             T result;
-            using (IDbConnection dbConnection = new SqlConnection(_configuration.GetConnectionString("default")))
+            using (IDbConnection dbConnection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 if (dbConnection.State == ConnectionState.Closed)
                     dbConnection.Open();
@@ -43,7 +43,7 @@ namespace AP.StarBug.Core.Service
 
         public List<T> GetAll<T>(string query, DynamicParameters sp_params, CommandType commandType = CommandType.StoredProcedure)
         {
-            using IDbConnection db = new SqlConnection(_configuration.GetConnectionString("default"));
+            using IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
             return db.Query<T>(query, sp_params, commandType: commandType).ToList();
         }
     }

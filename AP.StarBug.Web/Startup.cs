@@ -1,3 +1,8 @@
+using AP.StarBug.Core.Dao;
+using AP.StarBug.Core.Mapper;
+using AP.StarBug.Core.Repository.Imp;
+using AP.StarBug.Core.Repository.Interface;
+using AP.StarBug.Core.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,6 +28,18 @@ namespace AP.StarBug.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Auto Mapper Configurations
+            services.AddAppSettings(Configuration);
+
+            //DI
+            services.AddScoped<IDapperRepository, DapperRepository>();
+            services.AddScoped<IProductDao, ProductDao>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddCors(option => option.AddPolicy("APIPolicy", builder =>
+            {
+                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            }));
+
             services.AddControllersWithViews();
         }
 
@@ -45,7 +62,7 @@ namespace AP.StarBug.Web
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseCors("APIPolicy");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
